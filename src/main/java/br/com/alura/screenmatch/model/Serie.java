@@ -22,10 +22,11 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @OneToMany(mappedBy = "serie")
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER) // FECTCH =  O MODO QUE POEGAREI ESSES DADOS DE FORMA PREGUISOÇA(lAZY) OU MAIS AGIL(EAGER)
+    //Cascade eh o tipo de relacionamento nesse caso estou utilizando todos, mas eu poderia colocar so remove ou so add entre outros
     private List<Episodio> episodios = new ArrayList<>();
 
-    public Serie(DadosSerie dadosSerie){
+    public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
@@ -51,6 +52,7 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
 
@@ -120,6 +122,6 @@ public class Serie {
 
                         ", atores='" + atores + '\'' +
                         ", poster='" + poster + '\'' +
-                        ", sinopse='" + sinopse + '\'';
+                        ", episodios='" + episodios + '\'';
     }
 }
